@@ -7,5 +7,7 @@ This was implemented with a Raspberry Pi using a Sabrent USB Audio Stereo Sound 
 
 ### Installing alsa and pyalsaaudio
 
+```text
 sudo apt-get install libasound2-dev
 sudo -H pip3 install pyalsaaudio
+```
