@@ -75,11 +75,48 @@ def radio_delay(delay):
     out = setup_output()
     inp = setup_input()
 
+    max_index = 4000
+    sound_buffer = [None] * max_index 
+    input_index = 0
+    output_index = 0
+
+    start_time = time.process_time()
+
+    # Until we reach our delay time, simply buffer data
+    while time.process_time() - start_time < delay:
+        l, data = inp.read()
+
+        if l:
+            sound_buffer[input_index] = data
+            
+            input_index += 1
+
+            # If buffer size is reached, exit
+            if input_index > max_index * 0.9:
+                print("Buffer size exceeded")
+                return 1
+
+            time.sleep(.001)
+
+    print(input_index)
+
+    # Now that we've exceeded our pause, output old data while recording new
     while True:
         l, data = inp.read()
 
         if l:
-            out.write(data)
+            sound_buffer[input_index] = data
+
+            input_index += 1
+            if input_index >= max_index:
+                input_index = 0
+
+            out.write(sound_buffer[output_index])
+
+            output_index += 1
+            if output_index >= max_index:
+                output_index = 0
+
             time.sleep(.001)
 
 
